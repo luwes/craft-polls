@@ -1,0 +1,95 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set content %}
+	<form method="post" accept-charset="UTF-8" data-saveshortcut="1">
+		<input type="hidden" name="action" value="polls/savePoll">
+		<input type="hidden" name="redirect" value="polls">
+		{% if poll.id %}<input type="hidden" name="pollId" value="{{ poll.id }}">{% endif %}
+		{{ getCsrfInput() }}
+
+		<div id="polls-settings">
+			{{ forms.textField({
+				first: true,
+				label: "Name"|t,
+				instructions: "What this poll will be called in the CP."|t,
+				id: 'name',
+				name: 'name',
+				value: poll.name,
+				errors: poll.getErrors('name'),
+				autofocus: true,
+				required: true,
+				translatable: true
+			}) }}
+
+			{{ forms.textField({
+				label: "Handle"|t,
+				instructions: "How you’ll refer to this poll in the templates."|t,
+				id: 'handle',
+				class: 'code',
+				name: 'handle',
+				value: poll.handle,
+				errors: poll.getErrors('handle'),
+				required: true
+			}) }}
+
+			{% if craft.isLocalized() %}
+				{% set localesInput %}
+					<table class="data" style="width: auto;">
+						<thead>
+							<tr>
+								<td></td>
+								<th scope="col">{{ "Locale"|t }}</th>
+								<th scope="col">{{ "Default Status"|t }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for locale in craft.i18n.getSiteLocales() %}
+								{% set localeSelected = (brandNewPoll or poll.locales[locale.id] is defined) %}
+								<tr>
+									<td>
+										{{ forms.checkbox({
+											id: 'locale-'~locale.id,
+											name: 'locales[]',
+											value: locale.id,
+											checked: localeSelected,
+											toggle: '.for-locale-'~locale.id
+										}) }}
+									</td>
+									<td><label for="locale-{{ locale.id }}">{{ locale.name }} ({{ locale.id }})</label></td>
+									<td class="centeralign">
+										<div class="for-locale-{{ locale.id }}{% if not localeSelected %} hidden{% endif %}">
+											{{ forms.lightswitch({
+												name: 'defaultLocaleStatuses['~locale.id~']',
+												on:   (brandNewPoll or not poll.locales[locale.id] is defined or poll.locales[locale.id].enabledByDefault),
+												small: true
+											}) }}
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% endset %}
+
+				{{ forms.field({
+					label: "Which locales should questions and option choices in this poll target?"|t,
+					errors: poll.getErrors('localeErrors'),
+				}, localesInput) }}
+			{% endif %}
+
+		</div>
+
+		<hr>
+
+		<div class="buttons">
+			<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+		</div>
+	</form>
+{% endset %}
+
+
+{% set js %}
+	{% if not poll.handle %}new Craft.HandleGenerator('#name', '#handle');{% endif %}
+{% endset %}
+{% includeJs js %}

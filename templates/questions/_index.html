@@ -1,0 +1,51 @@
+{% extends "_layouts/elementindex" %}
+{% set title = "Poll questions"|t %}
+{% set elementType = 'Polls_Question' %}
+
+{% includeJsResource 'polls/js/polls.js' %}
+
+{% set tabs = {
+	polls: { label: "Polls"|t, url: url('polls') },
+	questions: { label: "Questions"|t, url: url('polls/questions') },
+} %}
+
+{% set selectedTab = 'questions' %}
+
+
+{% block sidebar %}
+	{% if polls|length %}
+		<div class="buttons">
+			{% if polls|length > 1 %}
+				<div class="btngroup submit">
+					<div class="btn submit menubtn add icon">{{ "New Question"|t }}</div>
+					<div class="menu">
+						<ul>
+							{% for poll in polls %}
+								<li>
+									<a href="{{ url('polls/'~poll.handle~'/questions/new') }}">
+										{{ poll.name|t }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			{% else %}
+				<a class="btn submit add icon" href="{{ url('polls/'~polls[0].handle~'/questions/new') }}">{{ "New Question"|t }}</a>
+			{% endif %}
+		</div>
+	{% endif %}
+
+	{{ parent() }}
+{% endblock %}
+
+{% block initJs %}
+	Craft.elementIndex = Craft.createElementIndex('{{ elementTypeClass }}', $('#main'), {
+		context:        	'{{ context }}',
+		showStatusMenu: 	{{ showStatusMenu is defined ? showStatusMenu|json_encode|raw : "'auto'" }},
+		showLocaleMenu: 	{{ showLocaleMenu is defined ? showLocaleMenu|json_encode|raw : "'auto'" }},
+		storageKey:     	'elementindex.{{ elementTypeClass }}',
+		criteria:       	{ localeEnabled: null },
+		onUpdateElements: polls.initQuestionsIndex
+	});
+{% endblock %}

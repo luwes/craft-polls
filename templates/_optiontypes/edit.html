@@ -1,0 +1,31 @@
+{% extends "_layouts/cp" %}
+
+{% import "_includes/forms" as forms %}
+
+
+{% set content %}
+	<form method="post" accept-charset="UTF-8" data-saveshortcut>
+		<input type="hidden" name="action" value="polls/saveOptionType">
+		{{ getCsrfInput() }}
+
+		<input type="hidden" name="redirect" value="polls">
+		<input type="hidden" name="pollId" value="{{ poll.id }}">
+		{% if optionType.id %}<input type="hidden" name="optionTypeId" value="{{ optionType.id }}">{% endif %}
+
+		{% include "_includes/fieldlayoutdesigner" with {
+			fieldLayout: optionType.getFieldLayout(),
+			customizableTabs: false,
+		} only %}
+
+		<hr>
+
+		<div class="buttons">
+			<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+		</div>
+	</form>
+{% endset %}
+
+
+{# {% if not optionType.handle %}
+	{% includeJs "new Craft.HandleGenerator('#name', '#handle');" %}
+{% endif %} #}

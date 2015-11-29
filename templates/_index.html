@@ -1,0 +1,61 @@
+{% extends "_layouts/cp" %}
+{% set title = "Polls"|t %}
+
+{% set tabs = {
+	polls: { label: "Polls"|t, url: url('polls') },
+	questions: { label: "Questions"|t, url: url('polls/questions') },
+} %}
+
+{% set selectedTab = 'polls' %}
+
+
+{% set content %}
+	<div id="nopolls"{% if polls %} class="hidden"{% endif %}>
+		<p>{{ "No polls exist yet."|t }}</p>
+	</div>
+
+	{% if polls|length %}
+		<table id="polls" class="data fullwidth collapsible">
+			<thead>
+				<th scope="col">{{ "Name"|t }}</th>
+				<th scope="col">{{ "Handle"|t }}</th>
+				<th scope="col">{{ "Question Type"|t }}</th>
+				<th scope="col">{{ "Option Type"|t }}</th>
+				<td class="thin"></td>
+			</thead>
+			<tbody>
+				{% for poll in polls %}
+					<tr data-id="{{ poll.id }}" data-name="{{ poll.name|t }}">
+						<th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('polls/' ~ poll.handle) }}">{{ poll.name|t }}</a></th>
+						<td data-title="{{ 'Handle'|t }}"><code>{{ poll.handle }}</code></td>
+						<td data-title="{{ 'Question Type'|t }}">
+							{% set questionType = poll.getQuestionTypes()[0] %}
+							<a href="{{ questionType.getCpEditUrl() }}">{{ "Edit question type"|t }}</a>
+						</td>
+						<td data-title="{{ 'Option Type'|t }}">
+							{% set optionType = poll.getOptionTypes()[0] %}
+							<a href="{{ optionType.getCpEditUrl() }}">{{ "Edit option type"|t }}</a>
+						</td>
+						<td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+
+	<div id="newpollcontainer" class="buttons">
+		<a href="{{ url('polls/new') }}" class="btn submit add icon">{{ "New poll"|t }}</a>
+	</div>
+{% endset %}
+
+
+{% set js %}
+	var adminTable = new Craft.AdminTable({
+		tableSelector: '#polls',
+		noObjectsSelector: '#nopolls',
+		newObjectBtnSelector: '#newpollcontainer',
+		deleteAction: 'polls/deletePoll',
+		confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}” and all its questions and results?"|t }}'
+	});
+{% endset %}
+{% includeJs js %}
