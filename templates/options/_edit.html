@@ -86,6 +86,21 @@
 					</ul>
 				{% endif %}
 
+				<div id="side-settings" class="pane">
+
+					{{ forms.selectField({
+						label: "Option Kind"|t,
+						instructions: 'If you choose <b>other</b>, users can enter free text'|t,
+						id: 'kind',
+						name: 'kind',
+						options: kindOptions,
+						value: option.kind,
+						toggle: true,
+						targetPrefix: 'kind-',
+						errors: option.getErrors('kind')
+					}) }}
+
+				</div>
 
 			</div>
 		</div>

@@ -27,6 +27,7 @@ class Polls_AnswerRecord extends BaseRecord
 	public function defineRelations()
 	{
 		return array(
+			'question' => array(static::BELONGS_TO, 'Polls_QuestionRecord', 'onDelete' => static::CASCADE),
 			'option' => array(static::BELONGS_TO, 'Polls_OptionRecord', 'onDelete' => static::CASCADE),
 			'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE),
 		);

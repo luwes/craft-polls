@@ -57,6 +57,7 @@ class Polls_OptionRecord extends BaseRecord
 	protected function defineAttributes()
 	{
 		return array(
+			'kind'			=> array(AttributeType::Enum, 'values' => array(Polls_OptionKind::Defined, Polls_OptionKind::Other), 'default' => Polls_OptionKind::Defined, 'required' => true),
 			'sortOrder' => AttributeType::SortOrder,
 		);
 	}

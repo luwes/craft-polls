@@ -23,12 +23,6 @@ class Polls_QuestionsService extends BaseApplicationComponent
 		return craft()->elements->getElementById($questionId, Polls_ElementType::Question, $localeId);
 	}
 
-	public function getQuestionsByOptionId($optionId, $localeId = null)
-	{
-		$criteria = array('optionId' => $optionId, 'localeId' => $localeId);
-		return $this->getCriteria($criteria);
-	}
-
 	/**
 	 * Saves an question.
 	 *

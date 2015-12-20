@@ -6,6 +6,9 @@ namespace Craft;
  */
 class Polls_QuestionModel extends BaseElementModel
 {
+	private $_options;
+	private $_answers;
+
 	// Properties
 	// =========================================================================
 
@@ -16,8 +19,25 @@ class Polls_QuestionModel extends BaseElementModel
 
 	public function getOptions()
 	{
-		$criteria = array('questionId' => $this->id);
-		return craft()->elements->getCriteria(Polls_ElementType::Option, $criteria);
+		if (!isset($this->_options))
+		{
+			$this->_options = craft()->polls_options->getOptionsByQuestionId($this->id);
+		}
+		return $this->_options;
+	}
+
+	public function getAnswers()
+	{
+		if (!isset($this->_answers))
+		{
+			$this->_answers = craft()->polls_answers->getAnswersByQuestionId($this->id);
+		}
+		return $this->_answers;
+	}
+
+	public function getTotalAnswers()
+	{
+		return count($this->getAnswers());
 	}
 
 	/**

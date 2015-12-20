@@ -137,7 +137,8 @@ class Polls_QuestionElementType extends BaseElementType
 	{
 		$attributes = array(
 			'title' 				=> Craft::t('Title'),
-			'id' 						=> Craft::t('Options'),
+			'options' 			=> Craft::t('Options'),
+			'results' 			=> Craft::t('Results'),
 			'dateCreated'   => Craft::t('Created'),
 		);
 
@@ -172,7 +173,7 @@ class Polls_QuestionElementType extends BaseElementType
 
 		switch ($attribute)
 		{
-			case 'id':
+			case 'options':
 			{
 				$question = craft()->polls_questions->getQuestionById($element->id);
 				$optionsCount = count($question->options);
@@ -187,7 +188,8 @@ class Polls_QuestionElementType extends BaseElementType
 					$html .= '<a class="menubtn options-menubtn" title="Options"></a>';
 					$html .= '<div class="menu">';
 					$html .= '<ul>';
-					foreach ($question->options as $optionRecord) {
+					foreach ($question->options as $optionRecord) 
+					{
 						$option = Polls_OptionModel::populateModel($optionRecord);
 						$html .= '<li>';
 						$html .= '<a href="'. $option->getCpEditUrl() .'">'. $option->title .'</a>';
@@ -196,6 +198,19 @@ class Polls_QuestionElementType extends BaseElementType
 					$html .= '</ul>';
 					$html .= '</div>';
 				}
+
+				return HtmlHelper::encodeParams($html, $params);
+			}
+
+			case 'results':
+			{
+				$question = craft()->polls_questions->getQuestionById($element->id);
+				$params = array(
+					'url' => $question->getCpEditUrl().'/answers',
+					'count' => $question->totalAnswers,
+				);
+
+				$html = '<a href="{url}">Edit answers ({count})</a>';
 
 				return HtmlHelper::encodeParams($html, $params);
 			}

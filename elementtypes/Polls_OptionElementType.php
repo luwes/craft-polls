@@ -169,6 +169,7 @@ class Polls_OptionElementType extends BaseElementType
 		return array(
 			'questionId' => AttributeType::Mixed,
 			'question' => AttributeType::Mixed,
+			'order' => array(AttributeType::String, 'default' => 'dateCreated asc'),
 		);
 	}
 
@@ -182,7 +183,7 @@ class Polls_OptionElementType extends BaseElementType
 	 */
 	public function modifyElementsQuery(DbCommand $query, ElementCriteriaModel $criteria)
 	{
-		$query->addSelect('po.questionId')
+		$query->addSelect('po.questionId, po.kind')
 			->join('polls_options po', 'po.id = elements.id');
 
 		if ($criteria->question)

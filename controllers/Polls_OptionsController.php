@@ -75,6 +75,16 @@ class Polls_OptionsController extends BaseController
 			throw new HttpException(404);
 		}
 
+		// Option kinds
+
+		$kinds = array(Polls_OptionKind::Defined, Polls_OptionKind::Other);
+		$variables['kindOptions'] = array();
+
+		foreach ($kinds as $kind)
+		{
+			$variables['kindOptions'][$kind] = Craft::t(ucfirst($kind));
+		}
+
 		// Get the locale
 		// ---------------------------------------------------------------------
 
@@ -221,7 +231,7 @@ class Polls_OptionsController extends BaseController
 		);
 
 		// Set the "Continue Editing" URL
-		$variables['continueEditingUrl'] = 'polls/'.$variables['poll']->handle.'/options/{id}';
+		$variables['continueEditingUrl'] = 'polls/'.$variables['poll']->handle.'/questions/'.$variables['question']->id.'/options/{id}';
 
 		// Render the template!
 		craft()->templates->includeCssResource('polls/css/polls.css');
@@ -255,6 +265,7 @@ class Polls_OptionsController extends BaseController
 		// Set the option attributes, defaulting to the existing values for whatever is missing from the post data
 		$option->questionId = craft()->request->getPost('questionId', $option->questionId);
 		$option->typeId = craft()->request->getPost('typeId', $option->typeId);
+		$option->kind = craft()->request->getPost('kind', $option->kind);
 
 		$option->getContent()->title = craft()->request->getPost('title', $option->title);
 		$option->setContentFromPost('fields');

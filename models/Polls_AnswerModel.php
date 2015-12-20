@@ -7,6 +7,19 @@ namespace Craft;
 class Polls_AnswerModel extends BaseModel
 {
 
+	// Public Methods
+	// =========================================================================
+
+	public function getOption()
+	{
+		return craft()->polls_options->getOptionById($this->optionId);
+	}
+
+	public function getUser()
+	{
+		return craft()->users->getUserById($this->userId);
+	}
+
 	// Protected Methods
 	// =========================================================================
 
@@ -19,14 +32,16 @@ class Polls_AnswerModel extends BaseModel
 	{
 		return array(
 			'id' 								=> AttributeType::Number,
+			'questionId'				=> AttributeType::Number,
 			'optionId'					=> AttributeType::Number,
 			'userId'						=> AttributeType::Number,
 			'text'							=> AttributeType::String,
-			'type'        			=> array(AttributeType::Enum, 'values' => array(Polls_AnswerType::Option, Polls_AnswerType::Text), 'default' => Polls_AnswerType::Option, 'required' => true),
 			'name'							=> AttributeType::String, // for guests
 			'email'							=> AttributeType::Email,	// for guests
 			'ipAddress'					=> AttributeType::String,
 			'userAgent'					=> AttributeType::String,
+			'dateCreated'   		=> AttributeType::DateTime,
+			'dateUpdated'   		=> AttributeType::DateTime,
 		);
 	}
 }

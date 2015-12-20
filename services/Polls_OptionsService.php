@@ -17,6 +17,13 @@ class Polls_OptionsService extends BaseApplicationComponent
 		return craft()->elements->getElementById($optionId, Polls_ElementType::Option, $localeId);
 	}
 
+	public function getOptionsByQuestionId($questionId)
+	{
+		$params = array('questionId' => $questionId);
+		$criteria = craft()->elements->getCriteria(Polls_ElementType::Option, $params);
+		return $criteria->find();
+	}
+
 	/**
 	 * Saves an option.
 	 *
@@ -45,6 +52,7 @@ class Polls_OptionsService extends BaseApplicationComponent
 
 		$optionRecord->questionId = $option->questionId;
 		$optionRecord->typeId = $option->typeId;
+		$optionRecord->kind = $option->kind;
 
 		$optionRecord->validate();
 		$option->addErrors($optionRecord->getErrors());

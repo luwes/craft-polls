@@ -6,6 +6,8 @@ namespace Craft;
  */
 class Polls_OptionModel extends BaseElementModel
 {
+	private $_answers;
+
 	// Properties
 	// =========================================================================
 
@@ -18,6 +20,37 @@ class Polls_OptionModel extends BaseElementModel
 	public function getLabel()
 	{
 		return $this->title;
+	}
+
+	public function getOptionInputName()
+	{
+		$question = $this->getQuestion();
+		$inputName = 'polls_options';
+		return sprintf('%s[%d][]', $inputName, $question->id);
+	}
+
+	public function getTextInputName()
+	{
+		if ($this->kind == Polls_OptionKind::Other)
+		{
+			$question = $this->getQuestion();
+			$inputName = 'polls_texts';
+		}
+		return sprintf('%s[%d][%d]', $inputName, $question->id, $this->id);
+	}
+
+	public function getAnswers()
+	{
+		if (!isset($this->_answers))
+		{
+			$this->_answers = craft()->polls_answers->getAnswersByOptionId($this->id);
+		}
+		return $this->_answers;
+	}
+
+	public function getTotalAnswers()
+	{
+		return count($this->getAnswers());
 	}
 
 	/**
@@ -150,8 +183,13 @@ class Polls_OptionModel extends BaseElementModel
 		return array_merge(parent::defineAttributes(), array(
 			'questionId' 		=> AttributeType::Number,
 			'typeId'				=> AttributeType::Number,
+			'kind'					=> array(AttributeType::Enum, 'values' => array(Polls_OptionKind::Defined, Polls_OptionKind::Other), 'default' => Polls_OptionKind::Defined, 'required' => true),
 			'sortOrder' 		=> AttributeType::SortOrder,
 			'questionId'		=> AttributeType::Number,
+
+			//just used for submitting the form
+			'selected'			=> array(AttributeType::Bool, 'default' => false),
+			'value'					=> array(AttributeType::String, 'default' => ''),
 		));
 	}
 }

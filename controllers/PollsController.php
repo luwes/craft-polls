@@ -176,7 +176,7 @@ class PollsController extends BaseController
 				}
 			}
 
-			//$variables['title'] = $variables['questionType']->name;
+			$variables['title'] = 'Edit question type';
 		}
 		else
 		{
@@ -290,7 +290,7 @@ class PollsController extends BaseController
 				}
 			}
 
-			//$variables['title'] = $variables['optionType']->name;
+			$variables['title'] = 'Edit option type';
 		}
 		else
 		{

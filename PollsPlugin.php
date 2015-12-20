@@ -31,9 +31,30 @@ class PollsPlugin extends BasePlugin
 		return true;
 	}
 
+	public function init()
+	{
+	}
+
+	public function getSettingsHtml()
+	{
+		return craft()->templates->render('polls/_settings', array(
+			'settings' => $this->getSettings()
+		));
+	}
+
+	protected function defineSettings()
+	{
+		return array(
+			'requireLogin' => array(AttributeType::Bool, 'default' => false),
+		);
+	}
+
 	public function registerCpRoutes()
 	{
 		return array(
+
+			'polls/(?P<pollHandle>{handle})/questions/(?P<questionId>\d+)/answers'	
+				=> array('action' => 'polls/answers/answersIndex'),
 
 			'polls/(?P<pollHandle>{handle})/questions/(?P<questionId>\d+)/options/(?P<optionId>\d+)/(?P<localeId>\w+)'	
 				=> array('action' => 'polls/options/editOption'),
