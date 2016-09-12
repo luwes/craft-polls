@@ -37,7 +37,7 @@ class PollsPlugin extends BasePlugin
 
 	public function getSettingsHtml()
 	{
-		return craft()->templates->render('polls/_settings', array(
+		return craft()->templates->render('polls/settings', array(
 			'settings' => $this->getSettings()
 		));
 	}

@@ -43,7 +43,7 @@ class Polls_AnswersController extends BaseController
 			array('label' => $variables['question']->title, 'url' => UrlHelper::getUrl('polls/'.$variables['poll']->handle.'/questions/'.$variables['question']->id)),
 		);
 
-		$this->renderTemplate('polls/answers/_index', $variables);
+		$this->renderTemplate('polls/answers/index', $variables);
 	}
 
 	/**
@@ -107,6 +107,11 @@ class Polls_AnswersController extends BaseController
 						}
 						elseif ($option->kind == Polls_OptionKind::Other) 
 						{
+							if (in_array($option->id, $options))
+							{
+								$option->selected = true;
+							}
+
 							if (isset($texts[$option->id]))
 							{
 								$option->selected = true;
@@ -116,7 +121,7 @@ class Polls_AnswersController extends BaseController
 						}
 					}
 
-					$canAnswer = $question->multipleVotes || !craft()->polls_answers->userAlreadyAnswered($user, $question);
+					$canAnswer = $question->multipleVotes || !craft()->polls_answers->hasAnswered($user, $question);
 
 	  			if (!$canAnswer && count($answers) > 0) 
 	  			{
@@ -154,8 +159,10 @@ class Polls_AnswersController extends BaseController
 	  	if ($errorCount > 0)
 	  	{
 		  	craft()->urlManager->setRouteVariables(array(
-					'questions' => $questions,
-					'errors' => $errors,
+		  		'pollResponse' => array(
+						'questions' => $questions,
+						'errors' => $errors,
+					)
 				));
 	  	}
 	  	else
@@ -190,9 +197,11 @@ class Polls_AnswersController extends BaseController
 	  		}
 
 		  	craft()->urlManager->setRouteVariables(array(
-					'success' => true,
-					'answers' => $answers,
-					'answeredQuestions' => $answeredQuestions,
+		  		'pollResponse' => array(
+						'success' => true,
+						'answers' => $answers,
+						'answeredQuestions' => $answeredQuestions,
+					)
 				));
 	  	}
   	}

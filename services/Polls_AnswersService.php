@@ -69,7 +69,7 @@ class Polls_AnswersService extends BaseApplicationComponent
 		}
 	}
 
-	public function userAlreadyAnswered($user, $question)
+	public function hasAnswered($user, $question)
 	{
 		$alreadyAnswered = false;
 		

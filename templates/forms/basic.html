@@ -1,0 +1,141 @@
+
+	{% includeCssFile "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" first %}
+	{% includeJsFile "https://code.jquery.com/jquery-1.11.3.min.js" %}
+	
+	{% includeJsResource 'polls/js/polls.js' %}
+
+	<form class="poll-form" method="post" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="polls/answers/saveAnswers">
+
+    {% macro errorList(errors) %}
+      {% if errors %}
+        <div class="errors">
+          {% for error in errors %}
+          	{% if error is iterable %}
+	          	{% for e in error %}
+								<div class="alert alert-danger">{{ e }}</div>
+							{% endfor %}
+						{% else %}
+							<div class="alert alert-danger">{{ error }}</div>
+						{% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endmacro %}
+    {% from _self import errorList %}
+
+		{% if pollResponse.errors is defined %}
+    	{{ errorList(pollResponse.errors) }}
+    {% endif %}
+
+    {% if pollResponse.success is defined and pollResponse.success %}
+    	<div class="alert alert-success">
+    		Thanks, your answers have been saved.
+    	</div>
+    {% endif %}
+
+    {% if questions is not defined %}
+    	{% set questions = craft.polls.questions %}
+		{% endif %}
+
+		{% if pollResponse.questions is defined %}
+			{% set questions = pollResponse.questions %}
+		{% endif %}
+
+		<div class="panel panel-default">
+				
+			<ul class="list-group">
+				{% for question in questions %}
+					{% set questionErrors = question.getErrors() %}
+					{% set errorClass = questionErrors|length > 0 ? 'has-error' : '' %}
+					
+					<li class="list-group-item poll-question {{ errorClass }}" style="padding: 8px 25px;">
+
+						<div class="pull-right text-muted" style="margin-top: 20px;">
+							{{ question.totalAnswers }} votes
+						</div>
+				  	<h3>{{ question.title }}</h3>
+
+						{% if questionErrors|length > 0 %}
+							{% for error in questionErrors %}
+		          	{% if error is iterable %}
+			          	{% for e in error %}
+										<span class="help-block">{{ e }}</span>
+									{% endfor %}
+								{% else %}
+									<span class="help-block">{{ error }}</span>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+
+						{% set inputType = question.multipleOptions ? 'checkbox' : 'radio' %}
+
+						<div class="poll-options">
+							{% for option in question.options %}
+								<div class="{{ inputType }} poll-option {{ option.kind }}">
+									<label>
+										<input type="hidden" value="" name="{{ option.optionInputName }}"> 
+										<input class="poll-option-input {{ option.kind }}" type="{{ inputType }}" value="{{ option.id }}" name="{{ option.optionInputName }}" {% if option.selected %} checked="checked"{% endif %}> 
+										{{ option.label }}
+									</label>
+								</div>
+
+								{% if option.kind == 'other' %}
+									<div class="form-group poll-other hide">
+										<input class="form-control" type="text" value="{{ option.value }}" name="{{ option.textInputName }}"> 
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+
+					</li>
+
+				{% endfor %}
+			</ul>
+
+			<div class="panel-footer">
+				<button class="btn btn-default" type="submit">Vote</button>
+				{% if craft.polls.hasAnswered(questions) %}
+					<span style="padding-left: 20px;">
+						<a class="poll-results-link" href="#">Results</a>
+					</span>
+				{% endif %}
+			</div>
+		</div>
+		
+	</form>
+
+	<div class="poll-results hide">
+		<div class="panel panel-default">
+			<ul class="list-group">
+				{% for question in questions %}
+					<li class="list-group-item" style="padding: 8px 25px;">
+						<h3>Results: {{ question.title }}</h3>
+						<p class="lead">{{ question.totalAnswers }} votes</p>
+						<ul class="list-group">
+							{% for option in question.options %}
+								{% if question.totalAnswers > 0 %}
+									{% set answersPercent = option.totalAnswers / question.totalAnswers * 100 %}
+								{% else %}
+									{% set answersPercent = 0 %}
+								{% endif %}
+								<li class="list-group-item" style="position: relative; background: none; z-index: 10;">
+									<span style="position: absolute; top: 0; left: 0; bottom: 0; z-index: -1; background-color: #f7f7f7; width: {{ answersPercent|round }}%;"></span>
+									<span class="pull-right">{{ answersPercent|round }}%</span>
+									{{ option.label }} ({{ option.totalAnswers }} votes)
+								</li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+			<div class="panel-footer">
+				<button class="btn btn-default poll-back-button">Back to poll</button>
+			</div>
+		</div>
+	</div>
+
+
+
+

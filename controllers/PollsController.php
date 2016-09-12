@@ -13,7 +13,7 @@ class PollsController extends BaseController
 	{
 		$variables['polls'] = craft()->polls->getAllPolls();
 
-		$this->renderTemplate('polls/_index', $variables);
+		$this->renderTemplate('polls/index', $variables);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class PollsController extends BaseController
 			array('label' => Craft::t('Polls'), 'url' => UrlHelper::getUrl('polls')),
 		);
 
-		$this->renderTemplate('polls/_edit', $variables);
+		$this->renderTemplate('polls/edit', $variables);
 	}
 
 	/**
@@ -195,7 +195,7 @@ class PollsController extends BaseController
 			array('label' => Craft::t('Question Type'), 'url' => UrlHelper::getUrl('polls/'.$variables['pollId'].'/questiontypes/'.$variables['questionTypeId'])),
 		);
 
-		$this->renderTemplate('polls/_questiontypes/edit', $variables);
+		$this->renderTemplate('polls/questiontypes/edit', $variables);
 	}
 
 	/**
@@ -309,7 +309,7 @@ class PollsController extends BaseController
 			array('label' => Craft::t('Option Type'), 'url' => UrlHelper::getUrl('polls/'.$variables['pollId'].'/optiontypes/'.$variables['optionTypeId'])),
 		);
 
-		$this->renderTemplate('polls/_optiontypes/edit', $variables);
+		$this->renderTemplate('polls/optiontypes/edit', $variables);
 	}
 
 	/**

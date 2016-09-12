@@ -38,7 +38,7 @@ class Polls_OptionsController extends BaseController
 			array('label' => $variables['question']->title, 'url' => UrlHelper::getUrl('polls/'.$variables['poll']->handle.'/questions/'.$variables['question']->id)),
 		);
 
-		$this->renderTemplate('polls/options/_index', $variables);
+		$this->renderTemplate('polls/options/index', $variables);
 	}
 
 	/**
@@ -235,7 +235,7 @@ class Polls_OptionsController extends BaseController
 
 		// Render the template!
 		craft()->templates->includeCssResource('polls/css/polls.css');
-		$this->renderTemplate('polls/options/_edit', $variables);
+		$this->renderTemplate('polls/options/edit', $variables);
 	}
 
 	/**

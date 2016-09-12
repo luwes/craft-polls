@@ -13,7 +13,7 @@ class Polls_QuestionsController extends BaseController
 	{
 		$variables['polls'] = craft()->polls->getAllPolls();
 
-		$this->renderTemplate('polls/questions/_index', $variables);
+		$this->renderTemplate('polls/questions/index', $variables);
 	}
 
 	/**
@@ -188,7 +188,7 @@ class Polls_QuestionsController extends BaseController
 
 		// Render the template!
 		craft()->templates->includeCssResource('polls/css/polls.css');
-		$this->renderTemplate('polls/questions/_edit', $variables);
+		$this->renderTemplate('polls/questions/edit', $variables);
 	}
 
 	/**

@@ -1,16 +1,46 @@
 (function() {
 
-	var Polls = function() {
+	function _showOtherTextInput(e) {
+		$(this)
+			.parents('.poll-option')
+			.next('.poll-other')
+			.toggleClass('hide', !$(this).prop('checked'))
+			.find('input')
+			.focus();
+	}
 
-		this.initQuestionsIndex = function() {
+	$(function() {
 
-			$('.options-menubtn').each(function() {
+		$('.poll-option-input:checkbox').on('change', _showOtherTextInput);
 
-				new Garnish.MenuBtn(this);
-			});
-		};
-	};
+		$('.poll-option-input:radio').on('change', function(e) {
 
-	window.polls = new Polls();
+			$(this)
+				.parents('.poll-options')
+				.find('.poll-other')
+				.addClass('hide');
+
+			_showOtherTextInput.call(this, e);
+		});
+
+		$('.poll-results-link').on('click', function(e) {
+			e.preventDefault();
+			$(this)
+				.parents('.poll-form')
+				.addClass('hide')
+				.next('.poll-results')
+				.removeClass('hide');
+		});
+
+		$('.poll-back-button').on('click', function(e) {
+			e.preventDefault();
+			$(this)
+				.parents('.poll-results')
+				.addClass('hide')
+				.prev('.poll-form')
+				.removeClass('hide');
+		});
+
+	});
 
 })();
