@@ -82,7 +82,7 @@ class Polls_AnswersService extends BaseApplicationComponent
 		//if the user didn't answer yet, maybe he wasn't logged in at the time
 		if (!$alreadyAnswered)
 		{
-			$history =& craft()->polls_answers->getAnswersCookie();
+			$history = craft()->polls_answers->getAnswersCookie();
 			$alreadyAnswered = isset($history[$question->id]) && count($history[$question->id]) > 0;
 		}
 
@@ -144,7 +144,7 @@ class Polls_AnswersService extends BaseApplicationComponent
 				// Might as well update our cache of the answers while we have it.
 				$this->_answersById[$answer->id] = $answer;
 
-				$history =& $this->getAnswersCookie();
+				$history = $this->getAnswersCookie();
 				$history[$answer->questionId][] = $answer->id;
 				$this->setAnswersCookie($history);
 
