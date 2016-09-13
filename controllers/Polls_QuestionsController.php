@@ -187,7 +187,7 @@ class Polls_QuestionsController extends BaseController
 		$variables['continueEditingUrl'] = 'polls/'.$variables['poll']->handle.'/questions/{id}';
 
 		// Render the template!
-		craft()->templates->includeCssResource('polls/css/polls.css');
+		craft()->templates->includeCssResource('polls/css/cp.css');
 		$this->renderTemplate('polls/questions/edit', $variables);
 	}
 
