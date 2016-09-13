@@ -13,17 +13,17 @@ class PollsPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-	    return '0.0.1';
+	    return '1.0.0';
 	}
 
 	public function getDeveloper()
 	{
-	    return 'luwes';
+	    return 'Wesley Luyten';
 	}
 
 	public function getDeveloperUrl()
 	{
-	    return 'http://luwes.co';
+	    return 'https://wesleyluyten.com';
 	}
 
 	public function hasCpSection()
