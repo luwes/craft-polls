@@ -1,7 +1,7 @@
-
-	{% includeCssFile "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" first %}
-	{% includeJsFile "https://code.jquery.com/jquery-1.11.3.min.js" %}
 	
+	{% includeCssResource 'polls/css/polls.css' %}
+
+	{% includeJsFile 'https://code.jquery.com/jquery-1.11.3.min.js' %}
 	{% includeJsResource 'polls/js/polls.js' %}
 
 	<form class="poll-form" method="post" accept-charset="UTF-8">
@@ -52,10 +52,10 @@
 					
 					<li class="list-group-item poll-question {{ errorClass }}" style="padding: 8px 25px;">
 
-						<div class="pull-right text-muted" style="margin-top: 20px;">
+						<div class="pull-right text-muted" style="margin-top: 10px;">
 							{{ question.totalAnswers }} votes
 						</div>
-				  	<h3>{{ question.title }}</h3>
+				  	<h3 class="poll-title">{{ question.title }}</h3>
 
 						{% if questionErrors|length > 0 %}
 							{% for error in questionErrors %}
@@ -111,7 +111,7 @@
 			<ul class="list-group">
 				{% for question in questions %}
 					<li class="list-group-item" style="padding: 8px 25px;">
-						<h3>Results: {{ question.title }}</h3>
+						<h3 class="poll-title">Results: {{ question.title }}</h3>
 						<p class="lead">{{ question.totalAnswers }} votes</p>
 						<ul class="list-group">
 							{% for option in question.options %}
@@ -135,7 +135,3 @@
 			</div>
 		</div>
 	</div>
-
-
-
-
