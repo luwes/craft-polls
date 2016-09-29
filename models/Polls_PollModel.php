@@ -178,9 +178,9 @@ class Polls_PollModel extends BaseModel
 	protected function defineAttributes()
 	{
 		return array(
-			'id'            						=> AttributeType::Number,
-			'name'          						=> AttributeType::String,
-			'handle'        						=> AttributeType::String,
+			'id'     => AttributeType::Number,
+			'name'   => AttributeType::String,
+			'handle' => AttributeType::String,
 		);
 	}
 }
