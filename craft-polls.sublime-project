@@ -4,5 +4,14 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"syntax_override":
+	{
+		"\\.html$":
+		[
+			"Craft-Twig",
+			"Syntaxes",
+			"Craft-Twig"
+		]
+	}
 }
