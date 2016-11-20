@@ -47,10 +47,10 @@ This parameter is a route variable send back from the Polls_AnswersController wh
 You can access your site’s poll questions from your templates via craft.polls.questions. It returns an ElementCriteriaModel object. This is a simplified example, for a more full and robust solution refer to the html in [templates/forms/basic.html](templates/forms/basic.html)
 
 ``` twig
-{% for question in craft.polls.questions %}
-	<form class="poll-form" method="post" accept-charset="UTF-8">
-		{{ getCsrfInput() }}
-		<input type="hidden" name="action" value="polls/answers/saveAnswers">
+<form class="poll-form" method="post" accept-charset="UTF-8">
+	{{ getCsrfInput() }}
+	<input type="hidden" name="action" value="polls/answers/saveAnswers">
+	{% for question in craft.polls.questions %}
 		<h1>{{ question.title }}</h1>
 		<div class="poll-options">
 			{% for option in question.options %}
@@ -63,9 +63,9 @@ You can access your site’s poll questions from your templates via craft.polls.
 				</div>
 			{% endfor %}
 		</div>
-		<button type="submit">Vote</button>
-	</form>
-{% endfor %}
+	{% endfor %}
+	<button type="submit">Vote</button>
+</form>
 ```
 
 #####Parameters
