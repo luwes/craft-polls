@@ -1,5 +1,5 @@
-#License for Craft CMS Polls plugin
-##License Summary
+# License for Craft CMS Polls plugin
+## License Summary
 
 - License does not expire
 - Can be distributed in unlimited projects
@@ -16,7 +16,7 @@
 
 [For more information on the license summary topics](http://www.binpress.com/page/licensing-options)
 
-##Craft CMS Polls plugin - Terms and conditions
+## Craft CMS Polls plugin - Terms and conditions
 
 1. Preamble: This Agreement, signed on Oct 23, 2016 (hereinafter: Effective Date) governs the relationship between Publisher, a Business Entity, (hereinafter: Licensee) and Wesley Luyten, a private person whose principal place of business is Den Tobberd 21, 2370 Arendonk (hereinafter: Licensor). This Agreement sets the terms, rights, restrictions and obligations on using Craft CMS Polls plugin (hereinafter: The Software) created and owned by Licensor, as detailed herein
 
