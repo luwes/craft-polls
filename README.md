@@ -98,7 +98,7 @@ Returns a Polls_PollModel object representing a section in your site, by its ID.
 #### craft.polls.getPollByHandle( pollHandle )
 Returns a Polls_PollModel object representing a poll in your site, by its handle.
 ``` twig
-{% set total = craft.polls.getPollByHandle(pollHandle) %}
+{% set poll = craft.polls.getPollByHandle(pollHandle) %}
 ```
 
 #### craft.polls.hasAnswered( questions )
