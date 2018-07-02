@@ -1,0 +1,127 @@
+{% extends "_layouts/cp" %}
+{% set fullPageForm = true %}
+
+{% import "_includes/forms" as forms %}
+
+
+{% block content %}
+    <input type="hidden" name="action" value="polls/polls/save-poll">
+    {{ redirectInput('polls') }}
+
+    {% if poll.id %}<input type="hidden" name="pollId" value="{{ poll.id }}">{% endif %}
+
+    {{ forms.textField({
+        first: true,
+        label: "Name"|t('polls'),
+        instructions: "What this poll will be called in the CP."|t('polls'),
+        id: 'name',
+        name: 'name',
+        value: poll.name,
+        errors: poll.getErrors('name'),
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {{ forms.textField({
+        label: "Handle"|t('polls'),
+        instructions: "How you’ll refer to this poll in the templates."|t('polls'),
+        id: 'handle',
+        class: 'code',
+        name: 'handle',
+        value: poll.handle,
+        errors: poll.getErrors('handle'),
+        required: true
+    }) }}
+
+    <hr>
+
+    {% set siteRows = [] %}
+    {% set siteErrors = poll.getErrors('siteSettings') %}
+
+    {% for site in craft.app.sites.getAllSites() %}
+        {% set siteSettings = poll.siteSettings[site.id] ?? null %}
+        {% if siteSettings %}
+            {% for attribute, errors in siteSettings.getErrors() %}
+                {% set siteErrors = siteErrors|merge(errors) %}
+            {% endfor %}
+        {% endif %}
+        {% set siteRows = siteRows|merge({
+            (site.handle): {
+                heading: site.name|t('site'),
+                enabled: include('_includes/forms/lightswitch', {
+                    name: 'sites['~site.handle~'][enabled]',
+                    on: brandNewPoll or siteSettings,
+                    value: site.id,
+                    small: true
+                }),
+                enabledByDefault: siteSettings ? siteSettings.enabledByDefault : true,
+            }
+        }) %}
+    {% endfor %}
+
+    {{ forms.editableTableField({
+        label: "Site Settings"|t('polls'),
+        instructions: "Choose which sites this poll should be available in, and configure the site-specific settings."|t('polls'),
+        id: 'sites',
+        name: 'sites',
+        cols: {
+            heading: {
+                type: 'heading',
+                heading: "Site"|t('polls'),
+                class: 'thin'
+            },
+            enabled: {
+                type: 'heading',
+                class: 'thin'~(not craft.app.getIsMultiSite() ? ' hidden')
+            },
+            enabledByDefault: {
+                type: 'lightswitch',
+                heading: "Default Status"|t('app'),
+                class: 'thin type-channel type-structure'
+            },
+        },
+        rows: siteRows,
+        staticRows: true,
+        errors: siteErrors|unique
+    }) }}
+
+    {% if craft.app.getIsMultiSite() %}
+        <div class="type-channel">
+            {{ forms.checkboxField({
+                label: 'Propagate poll questions across all enabled sites?'|t('polls'),
+                instructions: 'Whether poll questions should be propagated across all the sites the poll is enabled in. If this is disabled, each question will only belong to the site it was created in.'|t('polls'),
+                id: 'propagateQuestions',
+                name: 'propagateQuestions',
+                checked: poll.propagateQuestions,
+                warning: poll.id and poll.propagateQuestions ? 'Changing this may result in data loss.'|t('polls')
+            }) }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+{% js %}
+    var $siteRows = $('#sites').children('tbody').children(),
+        $lightswitches = $siteRows.children('th:nth-child(2)').children('.lightswitch');
+
+    function updateSites() {
+        $lightswitches.each(function() {
+            if ($(this).data('lightswitch').on) {
+                $(this).parent().nextAll('td').removeClass('disabled').find('textarea,div.lightswitch,input').attr('tabindex', '0');
+            } else {
+                $(this).parent().nextAll('td').addClass('disabled').find('textarea,div.lightswitch,input').attr('tabindex', '-1');
+            }
+        });
+    }
+
+    $lightswitches.on('change', updateSites);
+
+    Garnish.$doc.ready(function() {
+        updateSites();
+    });
+
+    {% if brandNewPoll %}
+        new Craft.HandleGenerator('#name', '#handle');
+    {% endif %}
+{% endjs %}
